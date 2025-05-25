@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import logo_web from '../picture/logo-1.webp';
+import '../styles/ContentHeader.css';
 
 function ContentHeader() {
   const navigate = useNavigate();
@@ -108,23 +109,21 @@ function ContentHeader() {
   }, []);
 
   return (
-    <nav className="bg-gray-800 p-4 shadow-md flex justify-between items-center">
+    <nav>
       {/* Logo */}
       <div className="logo">
         <Link to="/content/movies/all">
-          <img src={logo_web} alt="Logo" className="logo-img h-10" />
+          <img src={logo_web} alt="Logo" className="logo-img" />
         </Link>
       </div>
 
       {/* Menu chính */}
       <div className="header">
-        <ul className="flex space-x-6 text-white">
+        <ul>
           <li>
             <Link
               to="/content/movies/all"
-              className={`px-4 py-2 rounded-lg hover:bg-blue-600 ${
-                location.pathname === '/content/movies/all' ? 'bg-blue-700' : 'bg-gray-700'
-              }`}
+              className={`nav-link ${location.pathname === '/content/movies/all' ? 'active' : 'inactive'}`}
             >
               Tất cả phim
             </Link>
@@ -132,9 +131,7 @@ function ContentHeader() {
           <li>
             <Link
               to="/content/movies/approved"
-              className={`px-4 py-2 rounded-lg hover:bg-blue-600 ${
-                location.pathname === '/content/movies/approved' ? 'bg-blue-700' : 'bg-gray-700'
-              }`}
+              className={`nav-link ${location.pathname === '/content/movies/approved' ? 'active' : 'inactive'}`}
             >
               Đã duyệt
             </Link>
@@ -142,9 +139,7 @@ function ContentHeader() {
           <li>
             <Link
               to="/content/movies/pending"
-              className={`px-4 py-2 rounded-lg hover:bg-blue-600 ${
-                location.pathname === '/content/movies/pending' ? 'bg-blue-700' : 'bg-gray-700'
-              }`}
+              className={`nav-link ${location.pathname === '/content/movies/pending' ? 'active' : 'inactive'}`}
             >
               Chờ duyệt
             </Link>
@@ -153,8 +148,8 @@ function ContentHeader() {
       </div>
 
       {/* Ô tìm kiếm */}
-      <div className="search flex items-center relative">
-        <div className="relative">
+      <div className="search">
+        <div className="search-container">
           <input
             type="text"
             placeholder={`Tìm kiếm ${getSearchPlaceholder()}...`}
@@ -162,20 +157,20 @@ function ContentHeader() {
             onChange={handleSearchChange}
             onKeyDown={handleSearchSubmit}
             onClick={(e) => e.stopPropagation()}
-            className="p-2 pl-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+            className="search-input"
           />
           
           {/* Gợi ý tìm kiếm */}
           {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute z-50 mt-1 w-full bg-white rounded-md shadow-lg border border-gray-200">
+            <div className="suggestions">
               {suggestions.map((movie) => (
                 <div
                   key={movie.movie_id}
-                  className="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
+                  className="suggestion-item"
                   onClick={() => handleSuggestionClick(movie)}
                 >
-                  <div className="font-medium text-gray-800 truncate">{movie.title}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="suggestion-title">{movie.title}</div>
+                  <div className="suggestion-details">
                     {movie.year} • {movie.genre} • {movie.status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt'}
                   </div>
                 </div>
@@ -185,21 +180,19 @@ function ContentHeader() {
           
           {/* Loading indicator */}
           {isLoading && (
-            <div className="absolute right-3 top-2.5">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
-            </div>
+            <div className="loading-spinner"></div>
           )}
         </div>
       </div>
 
       {/* Thông tin người dùng */}
       <div className="user-infor">
-        <ul className="flex items-center space-x-4 text-white">
-          <li className="hidden sm:block">Ban Nội dung</li>
+        <ul>
+          <li>Ban Nội dung</li>
           <li>
             <button
               onClick={handleLogout}
-              className="button-logout bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+              className="button-logout"
             >
               Đăng Xuất
             </button>

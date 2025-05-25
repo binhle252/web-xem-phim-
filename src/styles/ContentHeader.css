@@ -1,0 +1,149 @@
+nav {
+  display: flex;
+  width: 100vw;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #111;
+  padding: 15px 200px;
+}
+
+.logo img {
+  width: 120px;
+  cursor: pointer;
+}
+
+.header ul, .search ul, .user-infor ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  gap: 50px;
+}
+
+.header li {
+  color: white;
+  list-style: none;
+  font-weight: bold;
+  text-decoration: none;
+  position: relative;
+}
+
+.header li:hover {
+  color: aquamarine;
+}
+
+.header li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.header li a:hover {
+  color: aquamarine;
+}
+
+.header li a.active {
+  color: #1e90ff; /* Màu xanh nhẹ để nổi bật trạng thái active */
+}
+
+.header li a.inactive {
+  color: white; /* Giữ màu trắng cho trạng thái inactive */
+}
+
+.search li {
+  align-items: center;
+  list-style: none;
+}
+
+.search input {
+  border-radius: 20px;
+  padding: 8px;
+  width: 200px;
+  border: none;
+  background-color: #222;
+  color: white;
+}
+
+.search input:focus {
+  outline: none;
+}
+
+.search .suggestions {
+  position: absolute;
+  z-index: 50;
+  top: 100%;
+  margin-top: 4px;
+  width: 100%;
+  background-color: #222;
+  border-radius: 5px;
+}
+
+.search .suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.search .suggestion-item:hover {
+  background-color: #333;
+}
+
+.search .suggestion-title {
+  font-weight: bold;
+  color: white;
+}
+
+.search .suggestion-details {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.search .loading-spinner {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-bottom-color: #1e90ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.user-infor li {
+  color: white;
+  list-style: none;
+  font-weight: bold;
+}
+
+.user-infor li:hover {
+  color: aquamarine;
+}
+
+.user-infor li:first-child {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .user-infor li:first-child {
+    display: block;
+  }
+}
+
+.user-infor .button-logout {
+  background-color: brown;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.user-infor .button-logout:hover {
+  background-color: #d9363e;
+}
+
+@keyframes spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
