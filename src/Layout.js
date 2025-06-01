@@ -25,7 +25,7 @@ import ListSearchMovie from "./pages/Admin/ListSearchMovie";
 import ManageMoviecuaContent from "./pages/ContentProvider/ManageMovie";
 import ApprovedMovies from "./pages/ContentProvider/ApprovedMovie";
 import PendingMovies from "./pages/ContentProvider/PendingMovie";
-
+import EpisodesManager from "./pages/ContentProvider/EpisodesManager";
 
 export default function Layout() {
   const location = useLocation();
@@ -76,6 +76,8 @@ export default function Layout() {
         <Route path="/content/movies/all" element={<ManageMoviecuaContent />} />
         <Route path="/content/movies/approved" element={<ApprovedMovies />} />
         <Route path="/content/movies/pending" element={<PendingMovies/>} />
+        <Route path="/admin/episodes/:movie_id" element={<EpisodesManager />} />
+
 
       </Routes>
     </>

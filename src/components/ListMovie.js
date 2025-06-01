@@ -43,20 +43,19 @@ function AdminList() {
     );
 }
 
-function AnimeItem({movie_id, title, image_url, genre, year, duration, episodes, status }) {
-    // Định dạng trạng thái
+function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes, status }) {
     const getStatusClass = () => {
         if (status === 'Approved') return 'approved';
         if (status === 'Pending') return 'pending';
         return 'review';
     };
-    //
+
     const handleDelete = (id) => {
         if (window.confirm("Bạn có chắc muốn xóa phim này không?")) {
             axios.delete(`http://localhost:3001/api/movies/${movie_id}`)
                 .then(() => {
                     alert("Xóa phim thành công!");
-                    window.location.reload(); // Load lại danh sách
+                    window.location.reload();
                 })
                 .catch(err => {
                     console.error("Lỗi khi xóa:", err);
@@ -92,8 +91,11 @@ function AnimeItem({movie_id, title, image_url, genre, year, duration, episodes,
                     <button>Sửa thông tin phim</button>
                 </Link>
                 <button onClick={() => handleDelete(movie_id)}>Xóa Phim</button>
+                {/* Nút "Quản lý tập phim" luôn hiển thị, không phụ thuộc số tập */}
+                <Link to={`/admin/episodes/${movie_id}`}>
+                    <button>Quản lý tập phim</button>
+                </Link>
             </div>
-
         </div>
     );
 }
