@@ -92,7 +92,7 @@ function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes
                 </Link>
                 <button onClick={() => handleDelete(movie_id)}>Xóa Phim</button>
                 {/* Nút "Quản lý tập phim" luôn hiển thị, không phụ thuộc số tập */}
-                <Link to={`/admin/episodes/${movie_id}`}>
+                <Link to={`/content/episodes/${movie_id}`}>
                     <button>Quản lý tập phim</button>
                 </Link>
             </div>

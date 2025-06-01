@@ -76,7 +76,7 @@ export default function Layout() {
         <Route path="/content/movies/all" element={<ManageMoviecuaContent />} />
         <Route path="/content/movies/approved" element={<ApprovedMovies />} />
         <Route path="/content/movies/pending" element={<PendingMovies/>} />
-        <Route path="/admin/episodes/:movie_id" element={<EpisodesManager />} />
+        <Route path="/content/episodes/:movie_id" element={<EpisodesManager />} />
 
 
       </Routes>
