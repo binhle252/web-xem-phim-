@@ -95,7 +95,10 @@ function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes
                 <Link to={`/admin/edit/${movie_id}`}>
                     <button>Sửa thông tin phim</button>
                 </Link>
-                <button onClick={() => handleDelete(movie_id)}>Xóa Phim</button>
+                    <button onClick={() => handleDelete(movie_id)}>Xóa Phim</button>
+                <Link to={`/content/episodes/${movie_id}`}>
+                    <button>Quản lý tập phim</button>
+                </Link>
             </div>
         </div>
     );

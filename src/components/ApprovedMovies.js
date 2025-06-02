@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import '../styles/ListMovie.css';
 import { Link } from 'react-router-dom';
+import '../styles/ListMovie.css';
 
 function AdminList() {
     const [animeList, setAnimeList] = useState([]);
 
-    useEffect(() => {
+    // Memoize fetchMovies để tránh ESLint warning (nếu có)
+    const fetchMovies = useCallback(() => {
         axios.get('http://localhost:3001/api/moviesad')
             .then(res => {
                 // Lọc chỉ các phim có status === 'approved'
                 const approvedMovies = res.data.filter(item => item.status.toLowerCase() === 'approved');
                 setAnimeList(approvedMovies);
             })
-            .catch(err => console.error("Lỗi:", err));
+            .catch(err => console.error("Lỗi khi lấy danh sách phim:", err));
     }, []);
+
+    useEffect(() => {
+        fetchMovies();
+    }, [fetchMovies]);
 
     return (
         <div className="list-movies">
@@ -22,7 +27,7 @@ function AdminList() {
                 <li>Quản lý phim (Phim đã duyệt)</li>
             </div>
             <div className="button-add">
-                <Link to={`/admin/add`}>
+                <Link to="/admin/add">
                     <button>THÊM PHIM</button>
                 </Link>
             </div>
@@ -39,6 +44,7 @@ function AdminList() {
                             duration={item.duration}
                             episodes={item.episodes}
                             status={item.status}
+                            onDelete={fetchMovies} // Truyền hàm fetchMovies để làm mới danh sách
                         />
                     ))
                 ) : (
@@ -49,7 +55,7 @@ function AdminList() {
     );
 }
 
-function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes, status }) {
+function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes, status, onDelete }) {
     // Định dạng trạng thái
     const getStatusClass = () => {
         return 'approved'; // Chỉ hiển thị phim đã duyệt nên trạng thái luôn là 'approved'
@@ -57,10 +63,10 @@ function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes
 
     const handleDelete = (id) => {
         if (window.confirm("Bạn có chắc muốn xóa phim này không?")) {
-            axios.delete(`http://localhost:3001/api/movies/${movie_id}`)
+            axios.delete(`http://localhost:3001/api/movies/${id}`)
                 .then(() => {
                     alert("Xóa phim thành công!");
-                    window.location.reload(); // Load lại danh sách
+                    onDelete(); // Gọi lại fetchMovies để làm mới danh sách
                 })
                 .catch(err => {
                     console.error("Lỗi khi xóa:", err);
@@ -85,7 +91,7 @@ function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes
                 <p><strong>Thể loại:</strong> {genre}</p>
                 <p><strong>Năm phát hành:</strong> {year}</p>
                 <p><strong>Thời lượng:</strong> {duration} phút</p>
-                {episodes && <p><strong>Số tập:</strong> {episodes} ( Đang cập nhật )</p>}
+                {episodes && <p><strong>Số tập:</strong> {episodes} (Đang cập nhật)</p>}
                 <div className={`status ${getStatusClass()}`}>
                     <span className="dot" />
                     Trạng thái: Đã duyệt
@@ -96,6 +102,9 @@ function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes
                     <button>Sửa thông tin phim</button>
                 </Link>
                 <button onClick={() => handleDelete(movie_id)}>Xóa Phim</button>
+                <Link to={`/content/episodes/${movie_id}`}>
+                    <button>Quản lý tập phim</button>
+                </Link>
             </div>
         </div>
     );

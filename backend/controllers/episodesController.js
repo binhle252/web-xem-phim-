@@ -117,9 +117,40 @@ const deleteEpisode = (req, res) => {
     });
 };
 
+// API: Cập nhật tập phim theo episode_id
+const updateEpisode = (req, res) => {
+    const episodeId = req.params.episodeId;
+    const { movie_id, episode_number, title, video_url } = req.body;
+
+    if (!episodeId || !movie_id || !episode_number || !title || !video_url) {
+        return res.status(400).json({ error: 'Thiếu thông tin cần thiết.' });
+    }
+
+    const query = `
+        UPDATE episodes
+        SET movie_id = ?, episode_number = ?, title = ?, video_url = ?
+        WHERE episode_id = ?
+    `;
+
+    db.query(query, [movie_id, episode_number, title, video_url, episodeId], (err, results) => {
+        if (err) {
+            console.error('Lỗi khi cập nhật tập phim:', err);
+            return res.status(500).json({ error: 'Lỗi truy vấn cơ sở dữ liệu.' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'Không tìm thấy tập phim để cập nhật.' });
+        }
+
+        res.status(200).json({ message: 'Cập nhật tập phim thành công!' });
+    });
+};
+
+// Thêm vào module.exports
 module.exports = {
     getEpisodesByMovieId,
     getEpisodeById,
     addEpisode,
-    deleteEpisode
+    deleteEpisode,
+    updateEpisode // Thêm hàm này
 };

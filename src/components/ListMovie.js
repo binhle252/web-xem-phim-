@@ -45,9 +45,8 @@ function AdminList() {
 
 function AnimeItem({ movie_id, title, image_url, genre, year, duration, episodes, status }) {
     const getStatusClass = () => {
-        if (status === 'Approved') return 'approved';
-        if (status === 'Pending') return 'pending';
-        return 'review';
+        if (status === 'approved') return 'approved';
+        if (status === 'pending') return 'pending';
     };
 
     const handleDelete = (id) => {
