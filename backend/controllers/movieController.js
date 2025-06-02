@@ -396,35 +396,7 @@ const getSliderMovie = (req, res) =>{
         res.status(200).json(result);
     })
 }
-// API: Tìm kiếm phim theo tiêu đề hoặc thể loại
-const searchMovies = (req, res) => {
-    const keyword = req.query.q;
-    if (!keyword) {
-        return res.status(400).json({ error: 'Vui lòng nhập từ khóa tìm kiếm.' });
-    }
 
-    const likeKeyword = `%${keyword}%`;
-    const sql = `
-        SELECT 
-            movie_id AS id,
-            title,
-            image_url,
-            genre,
-            description,
-            status
-        FROM movies
-        WHERE (title LIKE ? OR genre LIKE ?) AND status = 'Approved'
-        ORDER BY movie_id DESC
-    `;
-
-    db.query(sql, [likeKeyword, likeKeyword], (err, results) => {
-        if (err) {
-            console.error('Lỗi tìm kiếm phim:', err);
-            return res.status(500).json({ error: 'Lỗi máy chủ khi tìm kiếm phim' });
-        }
-        res.status(200).json(results);
-    });
-};
 const searchMoviesForAdmin= (req, res) =>{
     const searchTerm=req.query.movieName;
 
@@ -460,6 +432,52 @@ const searchMoviesForAdmin= (req, res) =>{
     });
 }
 
+// API: Tìm kiếm phim theo tiêu đề và trạng thái
+const searchMovies = (req, res) => {
+  const { q: query, status } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Vui lòng nhập từ khóa tìm kiếm.' });
+  }
+
+  const likeQuery = `%${query}%`;
+  let sql = `
+    SELECT 
+      m.movie_id,
+      m.title,
+      m.image_url,
+      m.genre,
+      m.release_year AS year,
+      m.duration,
+      m.description,
+      m.status,
+      COUNT(e.episode_id) AS episodes
+    FROM movies m
+    LEFT JOIN episodes e ON m.movie_id = e.movie_id
+    WHERE m.title LIKE ?
+  `;
+  const params = [likeQuery];
+
+  // Thêm điều kiện trạng thái nếu có
+  if (status && ['Approved', 'Pending'].includes(status)) {
+    sql += ' AND m.status = ?';
+    params.push(status);
+  }
+
+  sql += ' GROUP BY m.movie_id ORDER BY m.movie_id DESC';
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      console.error('Lỗi tìm kiếm phim:', err);
+      return res.status(500).json({ error: 'Lỗi máy chủ khi tìm kiếm phim' });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy phim phù hợp.' });
+    }
+    res.status(200).json(results);
+  });
+};
+
 
 module.exports = {
     getMovies,
@@ -471,7 +489,7 @@ module.exports = {
     addMovie,
     deleteMovie,
     getSliderMovie,
-    searchMovies,
-    searchMoviesForAdmin
+    searchMovies, // API mới
+    searchMoviesForAdmin // Giữ nguyên nếu cần
 };
 
